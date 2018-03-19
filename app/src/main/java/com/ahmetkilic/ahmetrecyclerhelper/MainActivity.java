@@ -15,7 +15,6 @@ import com.ahmetkilic.ea_recycler.EARecyclerHelper;
 import com.ahmetkilic.ea_recycler.EARecyclerView;
 import com.ahmetkilic.ea_recycler.interfaces.RecyclerClickListener;
 import com.ahmetkilic.ea_recycler.interfaces.RecyclerFunctionsListener;
-import com.ahmetkilic.ea_recycler.objects.LayoutObject;
 import com.ahmetkilic.eaprogress.widgets.CrystalPreloader;
 import com.ahmetkilic.eaprogress.widgets.EAProgressDialog;
 
@@ -37,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerFunctions
         progressDialog = new EAProgressDialog(this);
         progressDialog.addProgress(CrystalPreloader.Style.LINE_SCALE, CrystalPreloader.Size.SMALL);
 
-        EARecyclerView recyclerView = (EARecyclerView) findViewById(R.id.ea_recycler);
+        EARecyclerView recyclerView = findViewById(R.id.ea_recycler);
 
         //3rd parameter is optional. ProgressView for loading more items animation.
         // helper = new EARecyclerHelper(this, recyclerView);
@@ -85,14 +84,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerFunctions
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    List<LayoutObject> objectList = new ArrayList<>();
+                    List<Object> objectList = new ArrayList<>();
 
                     for (int i = helper.getObjectList().size(); i < helper.getObjectList().size() + 20; i++) {
-                        // Put your objects into LayoutObject with the type code you defined while adding new type to helper
-                        LayoutObject layoutObject = new LayoutObject(1, new MyObject("Title " + String.valueOf(i), " Content " + String.valueOf(i)));
-                        LayoutObject layoutObject2 = new LayoutObject(2, new MyObject2(" Content -> " + String.valueOf(i)));
-                        objectList.add(layoutObject);
-                        objectList.add(layoutObject2);
+
+                        objectList.add(new MyObject("Title " + String.valueOf(i), " Content " + String.valueOf(i)));
+                        objectList.add(new MyObject2(" Content -> " + String.valueOf(i),2));
                     }
                     // Insert the array of LayoutObjects to  helper. The second parameter is whether the data is the first data or more data
                     helper.insertItems(objectList, page != 0);
@@ -109,8 +106,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerFunctions
 
     @Override
     public void onRecycleItemClick(int type, int position) {
-        String string1 = ((MyObject) helper.getObjectList().get(position).getObject()).getString1();
-        Toast.makeText(this, string1 + " Clicked!", Toast.LENGTH_SHORT).show();
+       // String string1 = ((MyObject) helper.getObjectList().get(position).getString1();
+        Toast.makeText(this, " Clicked!", Toast.LENGTH_SHORT).show();
     }
 
     @Override

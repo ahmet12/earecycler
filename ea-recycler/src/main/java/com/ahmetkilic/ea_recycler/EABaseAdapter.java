@@ -1,6 +1,7 @@
 package com.ahmetkilic.ea_recycler;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,8 +10,9 @@ import android.view.ViewGroup;
 
 
 import com.ahmetkilic.ea_recycler.holders.BaseHolder;
+import com.ahmetkilic.ea_recycler.holders.ProgressViewHolder;
+import com.ahmetkilic.ea_recycler.interfaces.EATypeInterface;
 import com.ahmetkilic.ea_recycler.interfaces.RecyclerClickListener;
-import com.ahmetkilic.ea_recycler.objects.LayoutObject;
 import com.ahmetkilic.ea_recycler.objects.ProgressObject;
 
 import java.util.ArrayList;
@@ -24,12 +26,12 @@ class EABaseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
     private boolean VERTICAL;
-    private List<LayoutObject> items;
+    private List<Object> items;
     private List<Integer> layout_ids;
     private EAHolderFactory factory;
     private int progressViewLayoutId;
 
-    EABaseAdapter(Context context, List<LayoutObject> items, int progressViewLayoutId) {
+    EABaseAdapter(Context context, List<Object> items, int progressViewLayoutId) {
         this.context = context;
         this.progressViewLayoutId = progressViewLayoutId;
 
@@ -52,9 +54,9 @@ class EABaseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     void showLoadProgress() {
         if (VERTICAL)
-            items.add(new LayoutObject(EARecyclerHelper.PROGRESS_VERTICAL, new ProgressObject(progressViewLayoutId)));
+            items.add(new ProgressObject(progressViewLayoutId, EARecyclerHelper.PROGRESS_VERTICAL));
         else
-            items.add(new LayoutObject(EARecyclerHelper.PROGRESS_HORIZONTAL, new ProgressObject(progressViewLayoutId)));
+            items.add(new ProgressObject(progressViewLayoutId, EARecyclerHelper.PROGRESS_HORIZONTAL));
 
         notifyItemInserted(items.size() - 1);
     }
@@ -66,11 +68,15 @@ class EABaseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        return items.get(position).getType();
+        if (items.get(position) instanceof EATypeInterface){
+            return ((EATypeInterface)(items.get(position))).getType();
+        }else
+            return -1;
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         for (int i = 0; i < factory.getTypes().size(); i++)
             if (viewType == factory.getTypes().get(i)) {
@@ -79,11 +85,11 @@ class EABaseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
 
         Log.e("recycler_type_error", "BASE ADAPTER--> View type is not exists : " + String.valueOf(viewType));
-        return null;
+        return new ProgressViewHolder(inflater.inflate(R.layout.ea_recycler_progress_row, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         BaseHolder baseHolder = (BaseHolder) holder;
         baseHolder.loadItems(context, items.get(position), position);
     }

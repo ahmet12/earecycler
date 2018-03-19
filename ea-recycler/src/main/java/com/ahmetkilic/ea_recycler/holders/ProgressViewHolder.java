@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.ahmetkilic.ea_recycler.R;
-import com.ahmetkilic.ea_recycler.objects.LayoutObject;
 import com.ahmetkilic.ea_recycler.objects.ProgressObject;
 
 public class ProgressViewHolder extends BaseHolder {
@@ -22,8 +21,7 @@ public class ProgressViewHolder extends BaseHolder {
     public void loadItems(Context context, Object object, int position) {
         int progressViewResId = 0;
         if (object != null) {
-            LayoutObject layoutObject = (LayoutObject) object;
-            ProgressObject progressObject = (ProgressObject) layoutObject.getObject();
+            ProgressObject progressObject = (ProgressObject) object;
             progressViewResId = progressObject.getProgressViewLayoutId();
         }
 

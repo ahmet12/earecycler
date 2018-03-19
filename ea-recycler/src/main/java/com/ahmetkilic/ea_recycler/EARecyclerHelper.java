@@ -2,7 +2,6 @@ package com.ahmetkilic.ea_recycler;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.animation.Interpolator;
 
 import com.ahmetkilic.ea_recycler.animation.adapters.AlphaInAnimationAdapter;
@@ -35,7 +34,6 @@ import com.ahmetkilic.ea_recycler.animation.animators.SlideInRightAnimator;
 import com.ahmetkilic.ea_recycler.holders.BaseHolder;
 import com.ahmetkilic.ea_recycler.holders.ProgressViewHolder;
 import com.ahmetkilic.ea_recycler.interfaces.RecyclerFunctionsListener;
-import com.ahmetkilic.ea_recycler.objects.LayoutObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +46,7 @@ public class EARecyclerHelper implements EARecyclerView.LoadMoreListener {
 
     private EARecyclerView recyclerView;
     private EABaseAdapter recycleAdapter;
-    private List<LayoutObject> objectList;
+    private List<Object> objectList;
 
     private boolean loadMoreEnabled;
     private Context context;
@@ -100,6 +98,11 @@ public class EARecyclerHelper implements EARecyclerView.LoadMoreListener {
         recycleAdapter.addType(layout_id);
     }
 
+    public void addNewType(Class<? extends BaseHolder> clazz, int layout_id) {
+        recycleAdapter.getFactory().addType(clazz, 1);
+        recycleAdapter.addType(layout_id);
+    }
+
     private void showProgress(boolean show) {
         if (listener != null)
             listener.onProgressRequired(show);
@@ -126,7 +129,7 @@ public class EARecyclerHelper implements EARecyclerView.LoadMoreListener {
         }
     }
 
-    public void insertItems(List<LayoutObject> objects, boolean loadMore) {
+    public void insertItems(List<Object> objects, boolean loadMore) {
         recyclerView.setLoadingMoreEnabled(loadMoreEnabled);
         setPage(getPage() + 1);
         if (objects != null) {
@@ -165,7 +168,7 @@ public class EARecyclerHelper implements EARecyclerView.LoadMoreListener {
         showProgress(false);
     }
 
-    public List<LayoutObject> getObjectList() {
+    public List<Object> getObjectList() {
         return objectList;
     }
 
@@ -177,13 +180,13 @@ public class EARecyclerHelper implements EARecyclerView.LoadMoreListener {
         this.page = page;
     }
 
-    public void addSingleItem(int position, LayoutObject object) {
+    public void addSingleItem(int position, Object object) {
         objectList.add(position, object);
         recycleAdapter.notifyItemInserted(position);
         recyclerView.smoothScrollToPosition(position);
     }
 
-    public void updateItem(int position, LayoutObject item) {
+    public void updateItem(int position, Object item) {
         objectList.set(position, item);
         validateItem(position);
     }

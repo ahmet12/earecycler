@@ -8,7 +8,6 @@ import com.ahmetkilic.ahmetrecyclerhelper.R;
 import com.ahmetkilic.ahmetrecyclerhelper.objects.MyObject;
 import com.ahmetkilic.ea_recycler.holders.BaseHolder;
 import com.ahmetkilic.ea_recycler.interfaces.RecyclerClickListener;
-import com.ahmetkilic.ea_recycler.objects.LayoutObject;
 
 /**
  * Created by AhmetPC on 15.05.2017.
@@ -32,7 +31,7 @@ public class MyRecyclerHolder extends BaseHolder {
         if (context instanceof RecyclerClickListener)
             clickListener = (RecyclerClickListener) context;
 
-        MyObject myObject = (MyObject) ((LayoutObject) object).getObject();
+        MyObject myObject = (MyObject) object;
 
         if (clickListener != null) {
             final int final_pos = position;
